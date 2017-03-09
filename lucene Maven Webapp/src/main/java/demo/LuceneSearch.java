@@ -99,7 +99,7 @@ public class LuceneSearch {
 	private static String displayHtmlHighlight(Query query, Analyzer analyzer,
 			String fieldName, String fieldContent, int fragmentSize)
 			throws IOException, InvalidTokenOffsetsException {
-		// 创建一个高亮器
+		// 创建一个高亮器 
 		Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(
 				"<font color='red'>", "</font>"), new QueryScorer(query));
 		Fragmenter fragmenter = new SimpleFragmenter(fragmentSize);
