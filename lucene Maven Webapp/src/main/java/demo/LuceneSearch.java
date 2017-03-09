@@ -70,6 +70,9 @@ public class LuceneSearch {
 			Document document = is.doc(scoreDoc.doc);
 			
 			String text = document.get(fieldName);
+			TokenStream str = analyzer.tokenStream(fieldName, text);
+			str.toString();
+			
 			displayHtmlHighlight(query, analyzer,
 					fieldName, text, 200);
 			System.out.println(document.get("contents"));

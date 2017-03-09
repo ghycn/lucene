@@ -2,6 +2,7 @@ package demo;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -11,11 +12,21 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.POIXMLTextExtractor;
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.xmlbeans.XmlException;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Date;
 
 /**
  * 演示高亮搜索结果
@@ -25,7 +36,12 @@ import java.io.IOException;
  */
 public class HighLighterDemo {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws XmlException, OpenXML4JException {
+		
+		//保存索引文件的地方
+		String indexDir = "F:\\Lucene\\indexDir";
+		//将要搜索word文件的地方
+		String dateDir = "F:\\Lucene\\dateDir";
 		// Lucene Document的主要域名
 		String fieldName = "text";
 
@@ -39,29 +55,45 @@ public class HighLighterDemo {
 		try {
 			// 索引过程**********************************
 			// 建立内存索引对象
-			directory = new RAMDirectory();
+			//索引文件夹
+			 directory = FSDirectory.open(Paths.get(indexDir));
 
 			// 配置IndexWriterConfig
 			IndexWriterConfig iwConfig = new IndexWriterConfig(analyzer);
 			iwConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 			iwriter = new IndexWriter(directory, iwConfig);
-			{
-				// 加入一个文档
+			
+			
+			File[] files = new File(dateDir).listFiles();
+			for (int i = 0; i < files.length; i++) {
 				Document doc = new Document();
-				doc.add(new TextField(
-						fieldName,
-						"我白天是一名语言学习者，晚上是一名初级码农。空的时候喜欢看算法和应用数学书，也喜欢悬疑推理小说，ACG方面喜欢型月、轨迹。喜欢有思想深度的事物，讨厌急躁、拜金与安逸的人。目前在魔都某女校学习，这是我的个人博客。闻道有先后，术业有专攻，请多多关照。你喜欢写代码吗？",
-						Field.Store.YES));
-				doc.add(new TextField("title", "关于hankcs", Field.Store.YES));
+		        OPCPackage opcPackage = POIXMLDocument.openPackage(files[i].getAbsolutePath());
+		        POIXMLTextExtractor extractor = new XWPFWordExtractor(opcPackage);
+				//创建Field对象，并放入doc对象中 
+				doc.add(new TextField(fieldName, extractor.getText(),Field.Store.YES)); 
+				doc.add(new TextField("filename", files[i].getName(),Field.Store.YES));
+				doc.add(new TextField("indexDate",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
+				//写入IndexWriter
 				iwriter.addDocument(doc);
 			}
-			{
-				// 再加入一个
-				Document doc = new Document();
-				doc.add(new TextField(fieldName, "程序员喜欢黑夜", Field.Store.YES));
-				doc.add(new TextField("title", "关于程序员", Field.Store.YES));
-				iwriter.addDocument(doc);
-			}
+			
+//			{
+//				// 加入一个文档
+//				Document doc = new Document();
+//				doc.add(new TextField(
+//						fieldName,
+//						"我白天是一名语言学习者，晚上是一名初级码农。空的时候喜欢看算法和应用数学书，也喜欢悬疑推理小说，ACG方面喜欢型月、轨迹。喜欢有思想深度的事物，讨厌急躁、拜金与安逸的人。目前在魔都某女校学习，这是我的个人博客。闻道有先后，术业有专攻，请多多关照。你喜欢写代码吗？",
+//						Field.Store.YES));
+//				doc.add(new TextField("title", "关于hankcs", Field.Store.YES));
+//				iwriter.addDocument(doc);
+//			}
+//			{
+//				// 再加入一个
+//				Document doc = new Document();
+//				doc.add(new TextField(fieldName, "程序员喜欢黑夜", Field.Store.YES));
+//				doc.add(new TextField("title", "关于程序员", Field.Store.YES));
+//				iwriter.addDocument(doc);
+//			}
 			iwriter.close();
 
 			// 搜索过程**********************************
@@ -69,21 +101,21 @@ public class HighLighterDemo {
 			ireader = DirectoryReader.open(directory);
 			isearcher = new IndexSearcher(ireader);
 			
-			String keyword = "喜欢";
+			String keyword = "高铁";
 			// 使用QueryParser查询分析器构造Query对象
 			QueryParser qp = new QueryParser(fieldName, analyzer);
 			Query query = qp.parse(keyword);
 			System.out.println("Query = " + query);
 
 			// 搜索相似度最高的5条记录
-			TopDocs topDocs = isearcher.search(query, 5);
+			TopDocs topDocs = isearcher.search(query, 100);
 			System.out.println("命中：" + topDocs.totalHits);
 			// 输出结果
 			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
 			for (int i = 0; i < Math.min(5, scoreDocs.length); ++i) {
 				Document targetDoc = isearcher.doc(scoreDocs[i].doc);
-				System.out.print(targetDoc.getField("title").stringValue());
+				System.out.print(targetDoc.getField("filename").stringValue());
 				System.out.println(" , " + scoreDocs[i].score);
 
 				String text = targetDoc.get(fieldName);
