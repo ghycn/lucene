@@ -135,7 +135,7 @@ public class HighLighterDemo {
 	 * @throws IOException
 	 * @throws InvalidTokenOffsetsException
 	 */
-	static String displayHtmlHighlight(Query query, Analyzer analyzer,
+	private static String displayHtmlHighlight(Query query, Analyzer analyzer,
 			String fieldName, String fieldContent, int fragmentSize)
 			throws IOException, InvalidTokenOffsetsException {
 		// 创建一个高亮器
