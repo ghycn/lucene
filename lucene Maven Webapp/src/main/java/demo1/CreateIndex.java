@@ -31,7 +31,7 @@ public class CreateIndex {
 		// Lucene Document的主要域名
 		String fieldName = "text";
 		
-		// 实例化Analyzer分词器
+		// 实例化Analyzer分词器。
 		Analyzer analyzer = new StandardAnalyzer();
 		
 		directory = FSDirectory.open(Paths.get(indexDir));
