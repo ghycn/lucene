@@ -62,6 +62,6 @@ public class Test {
     } 
     
     public static void main(String[] args) throws CorruptIndexException, ParseException, IOException {
-    	paginationQuery("主机",10,1);
+    	paginationQuery("主机",5,1);
 	}
 }
