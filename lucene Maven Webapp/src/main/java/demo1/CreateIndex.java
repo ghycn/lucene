@@ -24,7 +24,7 @@ public class CreateIndex {
 		Directory directory = null;
 		IndexWriter iwriter;
 
-		//保存索引文件的地方
+		//保存索引文件的地方。
 		String indexDir = "F:\\Lucene\\indexDir";
 		//将要搜索word文件的地方
 		String dateDir = "F:\\Lucene\\dateDir";
