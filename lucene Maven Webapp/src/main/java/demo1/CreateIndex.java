@@ -23,7 +23,7 @@ public class CreateIndex {
 	public static void main(String[] args) throws IOException, XmlException, OpenXML4JException {
 		Directory directory = null;
 		IndexWriter iwriter;
-		
+
 		//保存索引文件的地方
 		String indexDir = "F:\\Lucene\\indexDir";
 		//将要搜索word文件的地方
