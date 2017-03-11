@@ -29,7 +29,7 @@ public class CreateIndex {
 		//将要搜索word文件的地方.
 		String dateDir = "F:\\Lucene\\dateDir";
 		// Lucene Document的主要域名
-		String fieldName = "text";
+		String fieldName = "FILE_TEXT";
 		
 		// 实例化Analyzer分词器。
 		Analyzer analyzer = new StandardAnalyzer();
@@ -50,32 +50,32 @@ public class CreateIndex {
 				String text = FlieRead.getTextFromWORD(absolutePath);
 				//创建Field对象，并放入doc对象中 
 				doc.add(new TextField(fieldName, text,Field.Store.YES)); 
-				doc.add(new TextField("filename",files[i].getName(),Field.Store.YES));
-				doc.add(new TextField("indexDate",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
+				doc.add(new TextField("FILE_NAME",files[i].getName(),Field.Store.YES));
+				doc.add(new TextField("INDEX_DATE",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
 				//写入IndexWriter
 				iwriter.addDocument(doc);
 			}else if(lowerCaseName.endsWith(".pdf")){
 				String text = FlieRead.getTextFromPDF(absolutePath);
 				//创建Field对象，并放入doc对象中 
 				doc.add(new TextField(fieldName, text,Field.Store.YES)); 
-				doc.add(new TextField("filename",files[i].getName(),Field.Store.YES));
-				doc.add(new TextField("indexDate",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
+				doc.add(new TextField("FILE_NAME",files[i].getName(),Field.Store.YES));
+				doc.add(new TextField("INDEX_DATE",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
 				//写入IndexWriter
 				iwriter.addDocument(doc);
 			}else if(lowerCaseName.endsWith(".txt")){
 				String text = FlieRead.getTextFromTXT(absolutePath);
 				//创建Field对象，并放入doc对象中 
 				doc.add(new TextField(fieldName, text,Field.Store.YES)); 
-				doc.add(new TextField("filename",files[i].getName(),Field.Store.YES));
-				doc.add(new TextField("indexDate",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
+				doc.add(new TextField("FILE_NAME",files[i].getName(),Field.Store.YES));
+				doc.add(new TextField("INDEX_DATE",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
 				//写入IndexWriter
 				iwriter.addDocument(doc);
 			}else if(lowerCaseName.endsWith(".xls")||lowerCaseName.endsWith(".xlsx")){
 				String text = FlieRead.getTextFromEXCEL(absolutePath);
 				//创建Field对象，并放入doc对象中 
 				doc.add(new TextField(fieldName, text,Field.Store.YES)); 
-				doc.add(new TextField("filename",files[i].getName(),Field.Store.YES));
-				doc.add(new TextField("indexDate",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
+				doc.add(new TextField("FILE_NAME",files[i].getName(),Field.Store.YES));
+				doc.add(new TextField("INDEX_DATE",DateTools.dateToString(new Date(), DateTools.Resolution.DAY),Field.Store.YES));
 				//写入IndexWriter
 				iwriter.addDocument(doc);
 			}

@@ -47,7 +47,7 @@ public class Search {
 		ireader = DirectoryReader.open(directory);
 		isearcher = new IndexSearcher(ireader);
 
-		String keyword = "lucene";
+		String keyword = "主机";
 		// 使用QueryParser查询分析器构造Query对象
 		QueryParser qp = new QueryParser(fieldName, analyzer);
 		Query query = qp.parse(keyword);
@@ -62,13 +62,13 @@ public class Search {
 		for (int i = 0; i < Math.min(5, scoreDocs.length); ++i) {
 			Document document = isearcher.doc(scoreDocs[i].doc);
 			System.out.println(document.getField("FILE_NAME").stringValue());
-			System.out.println(document.getField("INDEX_ID").stringValue());
+		//	System.out.println(document.getField("INDEX_ID").stringValue());
 			System.out.println(document.getField("INDEX_DATE").stringValue());
-			System.out.println(document.getField("FILE_PATH").stringValue());
+		//	System.out.println(document.getField("FILE_PATH").stringValue());
 			System.out.println(" , " + scoreDocs[i].score);
 			String text = document.get(fieldName);
 			System.out.println(displayHtmlHighlight(query, analyzer, fieldName,
-					text, 150));
+					text, 200));
 		}
 
 	}

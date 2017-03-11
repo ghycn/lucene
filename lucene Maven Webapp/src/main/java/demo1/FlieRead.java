@@ -143,45 +143,47 @@ public class FlieRead {
 				// 遍历每一行
 				for (int r = 0; r < rowCount; r++) {
 					Row row = sheet.getRow(r);
-					int cellCount = row.getPhysicalNumberOfCells(); // 获取总列数
-					// 遍历每一列
-					for (int c = 0; c < cellCount; c++) {
-						Cell cell = row.getCell(c);
-						if (cell != null) {
-							int cellType = cell.getCellType();
-							String cellValue = null;
-							switch (cellType) {
-							case Cell.CELL_TYPE_STRING: // 文本
-								cellValue = cell.getStringCellValue();
-								break;
-							case Cell.CELL_TYPE_NUMERIC: // 数字、日期
-								if (DateUtil.isCellDateFormatted(cell)) {
-									cellValue = fmt.format(cell
-											.getDateCellValue()); // 日期型
-								} else {
+					if(row!=null){
+						int cellCount = row.getPhysicalNumberOfCells(); // 获取总列数
+						// 遍历每一列
+						for (int c = 0; c < cellCount; c++) {
+							Cell cell = row.getCell(c);
+							if (cell != null) {
+								int cellType = cell.getCellType();
+								String cellValue = null;
+								switch (cellType) {
+								case Cell.CELL_TYPE_STRING: // 文本
+									cellValue = cell.getStringCellValue();
+									break;
+								case Cell.CELL_TYPE_NUMERIC: // 数字、日期
+									if (DateUtil.isCellDateFormatted(cell)) {
+										cellValue = fmt.format(cell
+												.getDateCellValue()); // 日期型
+									} else {
+										cellValue = String.valueOf(cell
+												.getNumericCellValue()); // 数字
+									}
+									break;
+								case Cell.CELL_TYPE_BOOLEAN: // 布尔型
 									cellValue = String.valueOf(cell
-											.getNumericCellValue()); // 数字
+											.getBooleanCellValue());
+									break;
+								case Cell.CELL_TYPE_BLANK: // 空白
+									cellValue = cell.getStringCellValue();
+									break;
+								case Cell.CELL_TYPE_ERROR: // 错误
+									cellValue = "错误";
+									break;
+								case Cell.CELL_TYPE_FORMULA: // 公式
+									cellValue = "错误";
+									break;
+								default:
+									cellValue = "错误";
 								}
-								break;
-							case Cell.CELL_TYPE_BOOLEAN: // 布尔型
-								cellValue = String.valueOf(cell
-										.getBooleanCellValue());
-								break;
-							case Cell.CELL_TYPE_BLANK: // 空白
-								cellValue = cell.getStringCellValue();
-								break;
-							case Cell.CELL_TYPE_ERROR: // 错误
-								cellValue = "错误";
-								break;
-							case Cell.CELL_TYPE_FORMULA: // 公式
-								cellValue = "错误";
-								break;
-							default:
-								cellValue = "错误";
+								result.append(cellValue + "    ");
+							} else {
+								result.append(null + "    ");
 							}
-							result.append(cellValue + "    ");
-						} else {
-							result.append(null + "    ");
 						}
 					}
 					result.append(System.lineSeparator());
