@@ -62,7 +62,7 @@ public class LuceneTest {
 		//查看IndexWriter里面有多少个索引
 		System.out.println("numDocs"+iw.numDocs());
 		iw.close();
-		
+		   
 	}
 
 }
