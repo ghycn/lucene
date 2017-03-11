@@ -26,7 +26,7 @@ public class CreateIndex {
 
 		//保存索引文件的地方。
 		String indexDir = "F:\\Lucene\\indexDir";
-		//将要搜索word文件的地方
+		//将要搜索word文件的地方.
 		String dateDir = "F:\\Lucene\\dateDir";
 		// Lucene Document的主要域名
 		String fieldName = "text";
