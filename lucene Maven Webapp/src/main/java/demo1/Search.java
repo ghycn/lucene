@@ -13,6 +13,9 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortField.Type;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.Fragmenter;
 import org.apache.lucene.search.highlight.Highlighter;
@@ -47,28 +50,33 @@ public class Search {
 		ireader = DirectoryReader.open(directory);
 		isearcher = new IndexSearcher(ireader);
 
-		String keyword = "主机";
+		
+		//排序
+		SortField[] sortArray; 
+        sortArray = new SortField[] {new SortField("FILE_TEXT",Type.SCORE,true)};  
+		
+		String keyword = "主机1";
 		// 使用QueryParser查询分析器构造Query对象
 		QueryParser qp = new QueryParser(fieldName, analyzer);
 		Query query = qp.parse(keyword);
-		System.out.println("Query = " + query);
+		//System.out.println("Query = " + query);
 
 		// 搜索相似度最高的5条记录
 		TopDocs topDocs = isearcher.search(query, 100);
-		System.out.println("命中：" + topDocs.totalHits);
+	//	TopDocs topDocs = isearcher.search(query, 100, new Sort(sortArray));
+		//System.out.println("命中：" + topDocs.totalHits);
 		// 输出结果
 		ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
-		for (int i = 0; i < Math.min(5, scoreDocs.length); ++i) {
+		for (int i = 0; i < scoreDocs.length; ++i) {
 			Document document = isearcher.doc(scoreDocs[i].doc);
-			System.out.println(document.getField("FILE_NAME").stringValue());
+			System.out.println(document.getField("FILE_TEXT").stringValue());
 		//	System.out.println(document.getField("INDEX_ID").stringValue());
-			System.out.println(document.getField("INDEX_DATE").stringValue());
+			//System.out.println(document.getField("INDEX_DATE").stringValue());
 		//	System.out.println(document.getField("FILE_PATH").stringValue());
-			System.out.println(" , " + scoreDocs[i].score);
+			System.out.println(scoreDocs[i].score);
 			String text = document.get(fieldName);
-			System.out.println(displayHtmlHighlight(query, analyzer, fieldName,
-					text, 200));
+//			System.out.println(displayHtmlHighlight(query, analyzer, fieldName,text, 200));
 		}
 
 	}
