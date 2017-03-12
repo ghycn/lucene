@@ -37,7 +37,7 @@ public class LuceneSearch {
 	public static void main(String[] args) throws IOException, ParseException, InvalidTokenOffsetsException {
 		String fieldName = "contents";
 		
-		// 保存索引文件的地方 
+		// 保存索引文件的地方      
 		String indexDir = "F:\\Lucene\\indexDir";
 		
 		//标准分词器
