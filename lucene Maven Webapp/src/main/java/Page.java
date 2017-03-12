@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Calendar;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
