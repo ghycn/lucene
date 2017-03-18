@@ -26,7 +26,7 @@ public class Page {
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param query
-	 * @param indexSearcher
+	 * @param indexSearcher   
 	 * @return
 	 * @throws IOException
 	 */
