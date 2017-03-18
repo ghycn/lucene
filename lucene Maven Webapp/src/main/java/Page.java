@@ -17,7 +17,7 @@ import org.apache.lucene.store.FSDirectory;
 public class Page {
 	
 	public static void main(String[] args) throws IOException {
-		Page page = new Page();
+		Page page = new Page();  
 		page.searchPage("主机", 1, 10);
 	}
 	
